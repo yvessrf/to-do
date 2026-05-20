@@ -1,0 +1,1 @@
+Projeto de lista de tarefas moderna desenvolvido com HTML, CSS e JavaScript.
