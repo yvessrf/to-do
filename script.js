@@ -20,8 +20,25 @@ form.addEventListener('submit', (event)=>{
 function createTask(taskText){
     // Cria um novo elemento de lista para a tarefa
     const li = document.createElement('li');
-    // Define o texto da tarefa como o conteúdo do elemento de lista
-    li.textContent = taskText;
-    // Adiciona o elemento de lista à lista de tarefas
-    taskList.appendChild(li);
+    // Define o conteúdo HTML da tarefa, incluindo os botões de completar e excluir
+   li.innerHTML = `
+        <span>${taskText}</span>
+        <div class="task-buttons">
+            <button type="button" class="complete-btn">✓</button>
+            <button type="button" class="delete-btn">✗</button>
+        </div>
+   `;
+
+   const completeBtn = li.querySelector('.complete-btn');
+   const deleteBtn = li.querySelector('.delete-btn');
+ // Adiciona eventos aos botões de completar e excluir
+   completeBtn.addEventListener('click', () => {
+        li.classList.toggle('completed');
+   });
+
+   deleteBtn.addEventListener('click', () => {
+        li.remove();
+   });
+ // Adiciona a nova tarefa à lista de tarefas
+   taskList.appendChild(li);
 }

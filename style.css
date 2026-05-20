@@ -64,3 +64,21 @@ li {
     justify-content: space-between;
     align-items: center;
 }
+
+.task-butons {
+    display: flex;
+    gap: 10px;
+}
+
+.complete-btn{
+    background: #22c55e;
+}
+
+.delete-btn{
+    background: #ef4444;
+}
+
+.completed span {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
