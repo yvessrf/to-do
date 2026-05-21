@@ -3,9 +3,11 @@ const form = document.querySelector('.todo-form');
 const input = document.querySelector('#task-input');
 const taskList = document.querySelector('#task-list');
 const themeToggle = document.querySelector('#theme-toggle');
+const filterButtons = document.querySelectorAll('.filter-btn');
 
 // Inicializa a lista de tarefas e carrega as tarefas e o tema salvos no localStorage
 let tasks = [];
+let currentFilter = 'all';
 loadTheme();
 loadTasks();
 
@@ -38,8 +40,18 @@ form.addEventListener('submit', (event) => {
 // Função para renderizar a lista de tarefas na página
 function renderTasks() {
     taskList.innerHTML = "";
-    // Para cada tarefa na lista de tarefas, cria um elemento de lista (li) e adiciona os botões de completar e excluir
-    tasks.forEach(task => {
+    // Filtra as tarefas com base no filtro selecionado (todas, pendentes ou concluídas)
+    const filteredTasks = tasks.filter((task) => {
+        if (currentFilter === "pending") {
+            return !task.completed
+        }
+        if (currentFilter === "completed") {
+            return task.completed
+        }
+        return true
+    })
+    // Para cada tarefa filtrada, cria um elemento de lista (li) e adiciona os botões de completar e excluir, além de adicionar eventos para esses botões
+    filteredTasks.forEach((task) => {
         const li = document.createElement('li');
         if (task.completed) {
             li.classList.add('completed');
@@ -103,3 +115,15 @@ function loadTheme() {
         document.body.classList.add('light');
     }
 }
+// Adiciona eventos aos botões de filtro para atualizar o filtro atual e renderizar a lista de tarefas com base no filtro selecionado
+filterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+        currentFilter = button.dataset.filter
+        filterButtons.forEach((btn) => {
+            btn.classList.remove("active")
+        })
+        button.classList.add("active")
+        renderTasks()
+    })
+
+})
