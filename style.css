@@ -154,3 +154,11 @@ li {
         transform: translateY(0);
     }
 }
+
+li {
+  cursor: grab;
+}
+
+li:active {
+  cursor: grabbing;
+}

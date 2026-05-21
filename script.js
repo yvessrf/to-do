@@ -65,6 +65,8 @@ function renderTasks() {
     // Para cada tarefa filtrada, cria um elemento de lista (li) e adiciona os botões de completar e excluir, além de adicionar eventos para esses botões
     filteredTasks.forEach((task) => {
         const li = document.createElement('li');
+        // Define o atributo de dados do elemento de lista com o ID da tarefa para facilitar a identificação ao clicar nos botões
+        li.dataset.id = task.id;
         if (task.completed) {
             li.classList.add('completed');
         }
@@ -147,8 +149,24 @@ function updateTaskStats() {
     const completedTasks = tasks.filter(task => task.completed).length;
     // Evita divisão por zero ao calcular o progresso, definindo como 0% se não houver tarefas
     const progress =
-    totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
-// Atualiza o texto dos elementos de contagem de tarefas e progresso com as informações calculadas
+        totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
+    // Atualiza o texto dos elementos de contagem de tarefas e progresso com as informações calculadas
     taskCount.textContent = `${totalTasks} tarefa${totalTasks !== 1 ? 's' : ''}`;
     taskProgress.textContent = `${progress}% concluído`;
 }
+
+// Inicializa a funcionalidade de arrastar e soltar usando a biblioteca Sortable.js para permitir a reordenação das tarefas na lista
+Sortable.create(taskList, {
+    animation: 150,
+    onEnd: () => {
+        const reorderedTasks = []
+        const taskElements = document.querySelectorAll("li")
+        taskElements.forEach((element) => {
+            const taskId = Number(element.dataset.id)
+            const task = tasks.find((item) => item.id === taskId)
+            reorderedTasks.push(task)
+        })
+        tasks = reorderedTasks
+        saveTasks()
+    }
+})
