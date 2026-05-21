@@ -1,9 +1,12 @@
+// Seleciona os elementos do DOM necessários para o funcionamento da aplicação
 const form = document.querySelector('.todo-form');
 const input = document.querySelector('#task-input');
 const taskList = document.querySelector('#task-list');
+const themeToggle = document.querySelector('#theme-toggle');
 
+// Inicializa a lista de tarefas e carrega as tarefas e o tema salvos no localStorage
 let tasks = [];
-
+loadTheme();
 loadTasks();
 
 // Quando o formulário for enviado, execute a função para criar uma nova tarefa
@@ -79,5 +82,24 @@ function loadTasks() {
     if (storedTasks) {
         tasks = JSON.parse(storedTasks);
         renderTasks();
+    }
+}
+
+// Evento para alternar entre os temas claro e escuro
+themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('light');
+    saveTheme();
+})
+// Função para salvar a preferência de tema no localStorage
+function saveTheme() {
+    const isLight = document.body.classList.contains('light');
+    // Salva a preferência de tema como 'light' ou 'dark' no localStorage
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+}
+// Função para carregar a preferência de tema do localStorage
+function loadTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        document.body.classList.add('light');
     }
 }
