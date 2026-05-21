@@ -4,6 +4,8 @@ const input = document.querySelector('#task-input');
 const taskList = document.querySelector('#task-list');
 const themeToggle = document.querySelector('#theme-toggle');
 const filterButtons = document.querySelectorAll('.filter-btn');
+const taskCount = document.querySelector('#task-cont');
+const taskProgress = document.querySelector('#task-progress');
 
 // Inicializa a lista de tarefas e carrega as tarefas e o tema salvos no localStorage
 let tasks = [];
@@ -40,6 +42,8 @@ form.addEventListener('submit', (event) => {
 // Função para renderizar a lista de tarefas na página
 function renderTasks() {
     taskList.innerHTML = "";
+    // Atualiza as estatísticas de tarefas (total, pendentes e concluídas)
+    updateTaskStats();
     // Filtra as tarefas com base no filtro selecionado (todas, pendentes ou concluídas)
     const filteredTasks = tasks.filter((task) => {
         if (currentFilter === "pending") {
@@ -50,6 +54,14 @@ function renderTasks() {
         }
         return true
     })
+    // Se não houver tarefas para o filtro selecionado, exibe uma mensagem informando que nenhuma tarefa foi encontrada
+    if (filteredTasks.length === 0) {
+        taskList.innerHTML = `
+        <p class="empty-message">Nenhuma tarefa encontrada para o filtro selecionado.</p>
+        `
+        return;
+    }
+
     // Para cada tarefa filtrada, cria um elemento de lista (li) e adiciona os botões de completar e excluir, além de adicionar eventos para esses botões
     filteredTasks.forEach((task) => {
         const li = document.createElement('li');
@@ -127,3 +139,16 @@ filterButtons.forEach((button) => {
     })
 
 })
+
+// Função para atualizar as estatísticas de tarefas (total, pendentes e concluídas) e o progresso de conclusão
+function updateTaskStats() {
+    const totalTasks = tasks.length;
+    // Calcula o número de tarefas concluídas e o progresso em porcentagem com base no total de tarefas
+    const completedTasks = tasks.filter(task => task.completed).length;
+    // Evita divisão por zero ao calcular o progresso, definindo como 0% se não houver tarefas
+    const progress =
+    totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
+// Atualiza o texto dos elementos de contagem de tarefas e progresso com as informações calculadas
+    taskCount.textContent = `${totalTasks} tarefa${totalTasks !== 1 ? 's' : ''}`;
+    taskProgress.textContent = `${progress}% concluído`;
+}
